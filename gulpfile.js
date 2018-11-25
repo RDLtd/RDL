@@ -156,7 +156,22 @@ gulp.task('wiredep', () => {
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('cname', function(){
+  gulp.src('app/CNAME')
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('cname', function(){
+  gulp.src('app/CNAME')
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('deploy', () => {
+  return gulp.src('./dist/**/*')
+    .pipe($.ghPages());
+});
+
+gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras', 'cname'], () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
@@ -165,12 +180,4 @@ gulp.task('default', () => {
     dev = false;
     runSequence(['clean', 'wiredep'], 'build', resolve);
   });
-});
-
-/**
- * Push build to gh-pages
- */
-gulp.task('deploy', function () {
-  return gulp.src("./dist/**/*")
-    .pipe(deploy())
 });
